@@ -4,6 +4,10 @@ const { ObjectId } = require("mongodb")
 const mongoConnect = require("../../../config/mongo-connect")
 const mongo = require("../../../services/mongo-crud")
 
+
+const schema = require("../../../utils/tagValidation")
+const { validate } = require("../../../middleware/formValidation")
+
 const getTags = async (req, res) => {
   const { db, client } = await mongoConnect()
   
@@ -88,7 +92,7 @@ const deleteTag = async (req, res) => {
 
 router.get('/tags', getTags)
 router.get('/tags/:id', getTag)
-router.post('/tags', createTags)
+router.post('/tags', validate(schema), createTags)
 router.put('/tags/:id', updateTag)
 router.delete('/tags/:id', deleteTag)
 
