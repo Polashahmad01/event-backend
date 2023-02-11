@@ -4,6 +4,9 @@ const { ObjectId } = require("mongodb")
 const mongoConnect = require("../../../config/mongo-connect")
 const mongo = require("../../../services/mongo-crud")
 
+const schema = require("../../../utils/eventValidation")
+const { validate } = require("../../../middleware/formValidation")
+
 const getEvents = async (req, res) => {
   const { db, client } = await mongoConnect()
 
@@ -94,7 +97,7 @@ const deleteEvent = async (req, res) => {
 
 router.get('/event', getEvents)
 router.get('/event/:id', getEvent)
-router.post('/event', createEvent)
+router.post('/event', validate(schema), createEvent)
 router.put('/event/:id', updateEvent)
 router.delete('/event/:id', deleteEvent)
 
