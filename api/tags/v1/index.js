@@ -41,7 +41,11 @@ const createTags = async (req, res) => {
   const { db, client } = await mongoConnect()
 
   try {
+    await db.collection('tags').createIndex({ tagName: 1}, { unique: true })
     const tag = await mongo.insertOne(db, 'tags', req.body)
+    if(!tag) {
+      return res.status(201).json({ success: true, data: 'Duplicate filed value' })
+    }
     res.status(201).json({ success: true, data: tag })
   } catch(error) {
     console.log('error', error)
