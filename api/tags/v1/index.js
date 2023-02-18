@@ -44,7 +44,7 @@ const createTags = async (req, res) => {
     await db.collection('tags').createIndex({ tagName: 1}, { unique: true })
     const tag = await mongo.insertOne(db, 'tags', req.body)
     if(!tag) {
-      return res.status(201).json({ success: true, data: 'Duplicate filed value' })
+      return res.status(201).json({ success: true, data: { acknowledged: false, message: 'Duplicate field value or tagName is already been taken' } })
     }
     res.status(201).json({ success: true, data: tag })
   } catch(error) {
