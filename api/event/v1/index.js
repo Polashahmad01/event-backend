@@ -43,7 +43,7 @@ const createEvent = async (req, res) => {
     await db.collection('events').createIndex({ title: 1},{ unique: true})
     const event = await mongo.insertOne(db, 'events', req.body)
     if(!event) {
-      return res.status(201).json({ success: true, data: 'Duplicate filed value' })
+      return res.status(201).json({ success: true, data: { acknowledged: false, message: 'Duplicate field value or event title is already been taken' } })
     }
     res.status(201).json({ success: true, data: event })
   } catch(error) {
