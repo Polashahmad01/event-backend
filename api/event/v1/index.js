@@ -57,7 +57,7 @@ const createEvent = async (req, res) => {
 const updateEvent = async (req, res) => {
   const { db, client } = await mongoConnect()
   const id = req.params.id
-  const { title, author, eventType, tags, contentUrl, summary, description, isSaved, isPublished, isUnPublished } = req.body
+  const { title, author, eventType, tags, contentUrl, summary, description, isSaved, isPublished, isUnPublished, status } = req.body
   
   const updateEventByFieldValue = { $set: {} }
 
@@ -99,6 +99,10 @@ const updateEvent = async (req, res) => {
 
   if(isUnPublished === false || isUnPublished === true) {
     updateEventByFieldValue.$set.isUnPublished = isUnPublished
+  }
+
+  if(status) {
+    updateEventByFieldValue.$set.status = status
   }
 
   try {
