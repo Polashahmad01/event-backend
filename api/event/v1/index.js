@@ -57,24 +57,52 @@ const createEvent = async (req, res) => {
 const updateEvent = async (req, res) => {
   const { db, client } = await mongoConnect()
   const id = req.params.id
+  const { title, author, eventType, tags, contentUrl, summary, description, isSaved, isPublished, isUnPublished } = req.body
+  
+  const updateEventByFieldValue = { $set: {} }
 
-  const updateEventField = {
-    $set: {
-      title: req.body.title,
-      author: req.body.author,
-      eventType: req.body.eventType,
-      tags: req.body.tags,
-      contentUrl: req.body.contentUrl,
-      summary: req.body.summary,
-      description: req.body.description,
-      isSaved: req.body.isSaved,
-      isPublished: req.body.isPublished,
-      isUnPublished: req.body.isUnPublished
-    },
+  if(title) {
+    updateEventByFieldValue.$set.title = title
+  }
+  
+  if(author) {
+    updateEventByFieldValue.$set.author = author
+  }
+
+  if(eventType) {
+    updateEventByFieldValue.$set.eventType = eventType
+  }
+
+  if(tags) {
+    updateEventByFieldValue.$set.tags = tags
+  }
+
+  if(contentUrl) {
+    updateEventByFieldValue.$set.contentUrl = contentUrl
+  }
+
+  if(summary) {
+    updateEventByFieldValue.$set.summary = summary
+  }
+
+  if(description) {
+    updateEventByFieldValue.$set.description = description
+  }
+  
+  if(isSaved === true || isSaved === false) {
+    updateEventByFieldValue.$set.isSaved = isSaved
+  }
+
+  if(isPublished === true || isPublished === false) {
+    updateEventByFieldValue.$set.isPublished = isPublished
+  }
+
+  if(isUnPublished === false || isUnPublished === true) {
+    updateEventByFieldValue.$set.isUnPublished = isUnPublished
   }
 
   try {
-    const updatedEventItem = await mongo.updateOne(db, 'events', { _id: new ObjectId(id)}, { upsert: true }, updateEventField)
+    const updatedEventItem = await mongo.updateOne(db, 'events', { _id: new ObjectId(id)}, { upsert: true }, updateEventByFieldValue)
     res.status(200).json({ success: true, data: updatedEventItem })
   } catch(error) {
     console.log('error', error)
