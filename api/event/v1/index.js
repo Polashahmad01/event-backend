@@ -93,7 +93,7 @@ const deleteEvent = async (req, res) => {
     res.status(200).json({ success: true, data: event })
   } catch(error) {
     console.log('error', error)
-    res.status(500).json({ success: false, data: { error }})
+    res.status(500).json({ success: false, data: { acknowledged: false, message: 'Unable to delete the event. Something went wrong' }})
   } finally {
     await client.close()
   }
