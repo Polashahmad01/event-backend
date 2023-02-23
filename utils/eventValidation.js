@@ -29,7 +29,11 @@ const schema = Joi.object({
   .required(),
   isUnPublished: Joi.boolean()
     .required(),
-  imageUrl: Joi.string()
+  imageUrl: Joi.string(),
+  status: Joi.string()
+    .required(),
+  createdAt: Joi.date()
+    .required()
 })
 
 module.exports = schema
