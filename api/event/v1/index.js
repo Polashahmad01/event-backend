@@ -27,7 +27,21 @@ const getEvent = async (req, res) => {
 
   try {
     const event = await mongo.findOne(db, 'events', { _id: new ObjectId(id) }, { sort: { "events.title": -1 }})
-    res.status(200).json({ success: true, data: event })
+
+    const eventLists = await mongo.fetchMany(db, 'events')
+    const uniqueEventLists = eventLists.filter(eventList => eventList._id !== event._id)
+
+    const matchedEvents = event.tags.map(tagLabel => uniqueEventLists.filter(uniqueEventList => uniqueEventList.tags.some(tag => tag.tagName === tagLabel.tagName))).flat()
+    
+    const matchedEventsArray = matchedEvents.map(matchedEvent => [matchedEvent._id, matchedEvent])
+
+    const matchedEventsMap = new Map(matchedEventsArray)
+
+    const result = [...matchedEventsMap.values()]
+
+    const recommendedEventList = result.slice(1)
+
+    res.status(200).json({ success: true, count: recommendedEventList.length, data: event, recommendedEvent: recommendedEventList })
   } catch(error) {
     console.log('error', error)
     res.status(500).json({ success: false, data: { error }})
