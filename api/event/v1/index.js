@@ -121,7 +121,8 @@ const updateEvent = async (req, res) => {
 
   try {
     const updatedEventItem = await mongo.updateOne(db, 'events', { _id: new ObjectId(id)}, { upsert: true }, updateEventByFieldValue)
-    res.status(200).json({ success: true, data: updatedEventItem })
+    const event = await mongo.findOne(db, 'events', { _id: new ObjectId(id) }, { sort: { "events.title": -1 }})
+    res.status(200).json({ success: true, data: updatedEventItem, event: event })
   } catch(error) {
     console.log('error', error)
     res.status(500).json({ success: false, data: { error }})
