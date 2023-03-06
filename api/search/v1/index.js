@@ -46,6 +46,6 @@ const searchContents = async (req, res) => {
   }
 }
 
-router.get("/event/search", searchContents)
+router.post("/event/search", searchContents)
 
 module.exports = router
