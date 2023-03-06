@@ -43,5 +43,14 @@ module.exports = {
       console.log('error', error)
       return false
     }
+  },
+  async search(db, collection, query = {}, keys = {}, sorting = {}, limit = 0, pageNumber = 0) {
+    try {
+      const response = await db.collection(collection).find(query).skip(pageNumber > 0 ? (pageNumber - 1) * limit : 0).limit(limit).sort(sorting).project(keys).toArray()
+      return response
+    } catch(error) {
+      console.log('error', error)
+      return false
+    }
   }
 }
